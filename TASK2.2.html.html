@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #222;
+      font-family: Arial,sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calc-container {
+      background: #333;
+      padding: 32px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px #0008;
+      text-align: center;
+    }
+    #result {
+      width: 90%;
+      font-size: 1.7em;
+      height: 45px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: none;
+      background: #222;
+      color: #fff;
+      text-align: right;
+      padding: 8px 12px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 56px);
+      grid-gap: 10px;
+      margin: 0 auto;
+      justify-content: center;
+    }
+    .buttons button {
+      font-size: 1.3em;
+      padding: 14px 0;
+      border: none;
+      border-radius: 6px;
+      background: #38a3a5;
+      color: #fff;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .buttons button:hover {
+      background: #57cc99;
+    }
+    .buttons .equal {
+      background: #f9c74f;
+      color: #22333b;
+    }
+    .buttons .equal:hover {
+      background: #f9844a;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="calc-container">
+    <input type="text" id="result" readonly>
+    <div class="buttons">
+      <button>7</button><button>8</button><button>9</button><button>/</button>
+      <button>4</button><button>5</button><button>6</button><button>*</button>
+      <button>1</button><button>2</button><button>3</button><button>-</button>
+      <button>0</button><button>.</button><button>C</button><button>+</button>
+      <button class="equal">=</button>
+    </div>
+  </div>
+  <script>
+    const result = document.getElementById('result');
+    let currentInput = "";
+    document.querySelectorAll('.buttons button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const value = this.textContent;
+        if (value === 'C') {
+          currentInput = "";
+          result.value = "";
+        } else if (value === '=') {
+          try {
+            if(currentInput.trim() !== ""){
+              currentInput = eval(currentInput).toString();
+              result.value = currentInput;
+            }
+          } catch {
+            result.value = "Error";
+            currentInput = "";
+          }
+        } else {
+          currentInput += value;
+          result.value = currentInput;
+        }
+      });
+    });
+
+    // Keyboard input handling
+    document.addEventListener('keydown', function(e) {
+      if (/[\d\+\-\*\/\.]/.test(e.key)) {
+        currentInput += e.key;
+        result.value = currentInput;
+      } else if (e.key === 'Enter') {
+        try {
+          currentInput = eval(currentInput).toString();
+          result.value = currentInput;
+        } catch {
+          result.value = "Error";
+          currentInput = "";
+        }
+      } else if (e.key === "Backspace") {
+        currentInput = currentInput.slice(0, -1);
+        result.value = currentInput;
+      } else if (e.key.toUpperCase() === "C") {
+        currentInput = "";
+        result.value = "";
+      }
+    });
+  </script>
+</body>
+</html>
